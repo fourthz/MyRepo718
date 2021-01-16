@@ -1,0 +1,53 @@
+---
+title: "EDRM 718 Spring 2021"
+author: "Geophrey Odero"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_notebook: default
+  word_document: default
+---
+
+```{r include=FALSE}
+library(tidyverse)
+library(AMCP)
+library(plyr)
+library(car)
+library(effects)
+library(tidyverse)
+library(MBESS)
+library(emmeans)
+library(tidyr)
+library(dplyr)
+library(gplots) 
+library(ggplot2)
+library(gmodels)
+library(lsmeans)
+```
+
+
+*****
+
+### ***Reasons why I enrolled in this course***
+
+It is a known fact that R is a programming language for statistical computing and graphics that one can use to clean, analyze, and graph data. It is widely used by researchers from diverse disciplines to estimate and display results and by teachers of statistics and research methods.   I decided to enroll in this course because I need to improve my R skills.  This will enable me to have a tool that I can use in my research as a PhD student and to enrich my statistical and analytical skills in the job market.
+
+
+*****
+
+### ***My Previous experience with R***
+
+I started using R software in the year 2011 when I joined the graduate school. I took many statistical classes where students had to use R, SAS, Minitab and SPSS for the homework and projects.
+
+*****
+
+### ***How I plan to use R after this course***
+
+My main objective is to sharpen my R skills and use the knowledge gained for data analysis & simulations in my research.
+
+*****
+
+### ***How deep do I want to dive into R?***
+
+Proficiency in a programming language is a key component in research.  I would like to know enough R to use it for data analysis in my research, conduct simulations, be able to create my own R packages and probably be able to teach R someday.
+
+*****
