@@ -1,0 +1,319 @@
+---
+title: "EDRM 718 Spring 2021: Exercise Set A"
+author: "Geophrey Odero"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_notebook: default
+  word_document: default
+  fontsize: 12pt
+df_print: paged
+header-includes: \usepackage{amsmath} \usepackage{color}
+---
+
+```{r include=FALSE}
+library(tidyverse)
+library(AMCP)
+library(plyr)
+library(car)
+library(effects)
+library(tidyverse)
+library(MBESS)
+library(emmeans)
+library(tidyr)
+library(dplyr)
+library(gplots) 
+library(ggplot2)
+library(gmodels)
+library(lsmeans)
+```
+
+
+*****
+
+**Directions**: _Complete this assignment in an R notebook. Make sure to number each item, but it is optional for you to copy the prompt for the item. Make sure that your notebook is neat and organized and that all your code chunks run without error, even after clearing the environment. Include both the exercise set letter and your name in your notebook filename. When you are finished, push your repository to GitHub. (Four points per item unless stated otherwise.)_
+
+
+*****
+
+1.) **Randomly select five members of our class and contact them to find out how far they live from the University of South Carolina, to the nearest mile. (Email addresses will be available on a post in the Research Café.) Write a line of code that will create a vector called distance that contains the distance (to the nearest mile) of your five colleagues, and yourself, from the University.**
+
+```{r}
+sample (c("Alzughaibi","Demir","Terlizzi","Abrams", "Walters","Sox",
+          "Wilson","Bin-Hazza","Jiang","Julie", "Seidman","Quasem",
+          "Lewis","Pernetti","Dastrup","Gonzales","Alshehri","Toomy" ),
+        size=5, replace =F)
+
+
+```
++ _Colleagues: Wilson, Quassem, Hazza, Julie and Ali._
+
+
+```{r}
+distance<-c(18,5,20,16,12,12)
+class(distance)
+```
+
+*****
+
+2.)  ***What is the class of the distance vector?***
+
+```{r}
+class(distance)
+```
+
+*****
+
+3.)  ***Write a line of code that names each element of distance with the name of the person who travels that distance.***
+
+```{r}
+names(distance) <-c("Wilson","Quassem","Hazza","Julie","Ali","Odero")
+distance
+```
+
+
+*****
+
+4.)  ***Write a line of code to coerce the distance vector to a logical class. Store the result in logical_distance.***
+
+```{r}
+logical_distance<-as.logical(distance)
+```
+
+*****
+
+5.) ***List what is contained in logical_distance and explain why these are the elements of the vector***
+
+```{r}
+logical_distance
+```
+_These are elements of the vector because all non-zero values being true._
+
+*****
+
+6.) ***If you want to store not only the names and distances of your learning group members, but also their email addresses, what would be the best object for storing these data?***
+
++ _data frame_
+
+*****
+
+7.) ***Write code to accomplish the task in #6.***
+
+```{r}
+Student_names<- c("Wilson","Quassem","Hazza","Julie","Ali","Odero") 
+Miles_To_Campus = c(18,5,20,16,12,12) 
+Email_Contact = c("wilsonen@law.sc.edu", "quasem@email.sc.edu","binhazza@email.sc.edu",
+                  "huijuan@email.sc.edu","alzughaa@email.sc.edu","godero@mailbox.sc.edu") 
+Colleagues_data= data.frame(Student_names, Email_Contact, Miles_To_Campus) 
+Colleagues_data
+```
+
+
+*****
+
+8.) ***Provide the object name, class, attributes, and dimensions for the object you created in #7.***
+
+```{r}
+class(Colleagues_data)
+attributes(Colleagues_data)
+dim(Colleagues_data)
+```
+
+_data frame for Colleagues data_ 
+
+
+*****
+
+9.) ***Shown below is a correlation matrix. Write code to create a matrix object that contains this correlation matrix***
+
+```{r}
+Cor_mat<-matrix(c(1.0,0.378,-0.093,0.378,1.0,0.588,-0.093,0.588,1.0),nrow=3,ncol=3,byrow=TRUE)
+Cor_mat
+```
+
+
+*****
+
+10.) ***The three variables being correlated are (in order): IQ, brain size, and height. Add code to add these names to both the rows and columns of your matrix.***
+
+```{r}
+rownames(Cor_mat) <- c("IQ","brain size","height")
+colnames(Cor_mat)<- c("IQ","brain size","height")
+Cor_mat
+```
+
+*****
+
+11.) ***Select a restaurant. Write code to create a list with the following named elements.***
+
++ Name: Name of the restaurant
++ City: Town or city where the restaurant is located
++ Sat_Hours: The opening and closing times on Saturdays
++ Food_Type: Main type of cuisine
++ Alcohol: A logical indicator of whether or not alcohol is served
++ Entrée_Range: The range of prices (low to high) of entrees
+
+```{r}
+Items<- c("Restaurant name:","City:","Sat_Hours:","Food_Type:","Alcohol:","Entrée_Range:") 
+Details= c("Zaxbys","Columbia","10:30am-11:30pm","Fast Food", "No","Chicken") 
+Zaxbys_data= data.frame(Items,Details) 
+Zaxbys_data
+```
+
+*****
+
+12.) ***Add a comment to your object that is a brief review of the restaurant.***
+
+```{r}
+Items<- c("Restaurant name:","City:","Sat_Hours:","Food_Type:","Alcohol:","Entrée_Range:","Comment:") 
+Details= c("Zaxbys","Columbia","10:30am-11:30pm","Fast Food", "No","Chicken","Excellent sandwiches and salads") 
+Zaxbys_data= data.frame(Items,Details) 
+Zaxbys_data
+```
+
+*****
+
+13.) ***Write code to count the number of students in your distance vector who live more than five miles from the University. (Hint: Use a relational operator with your distance vector and store the results in a new vector. Use the sum function with this new vector. If you want, you can also do this in one line without creating a new vector.)***
+
+
+```{r}
+sum(Colleagues_data$Miles_To_Campus >5)
+```
+
+*****
+
+14.) ***Write a line of code to determine if anyone in your distance vector lives more than 10 miles from the University.***
+
+
+```{r}
+Colleagues_data$Miles_To_Campus>10
+```
+_We see that the 5 True and 1 false in terms of logical operator.  There are 5 colleagues who live more than 10 miles from the university._
+
+
+*****
+
+
+*****
+
+15.) ***Import the Mount Holly Elementary Data into an object called Student_Data.***
+
+```{r}
+Student_Data<- read.csv("C:/Users/jeffo/OneDrive/Desktop/R projects/My Journey with R/Mount Holly Elementary Data.csv")
+class(Student_Data)
+```
+*****
+
+16.) ***What kind of object are the data stored in?***
+
++ _data frame_
+
+*****
+
+17.) ***Find the class of each vector in Student_Data.***
+
+```{r}
+#Student_Data
+class(Student_Data$First.Name)
+class(Student_Data$Last.Name)
+class(Student_Data$Gender)
+class(Student_Data$Grade)
+class(Student_Data$Score)
+
+```
+
+*****
+
+18.) ***Change the vector of grade in Student_Data to be a factor***
+
+```{r}
+Student_Data$Grade[Student_Data$Grade==3] <- "Grade 3"
+Student_Data$Grade[Student_Data$Grade==4] <- "Grade 4"
+Student_Data$Grade[Student_Data$Grade==5] <- "Grade 5"
+Student_Data$Grade <- as.factor(Student_Data$Grade)
+class(Student_Data$Grade)
+```
+
+*****
+
+19.) ***What does R see as the levels of the grade factor?***
+
+```{r}
+levels(Student_Data$Grade)
+```
+
+*****
+
+20.) ***Conduct a t test to calculate a confidence interval for the difference in mean scores for males and females. Store the result in t_result.***
+
+```{r}
+male_scores = subset(Student_Data, Gender == "Male")
+female_scores=subset(Student_Data, Gender == "Female")
+t_result <- t.test(male_scores$Score, female_scores$Score)
+t_result$conf.int
+```
+
+*****
+
+21.) ***What are the attributes of t_result?***
+
+```{r}
+attributes(t_result)
+```
+
+*****
+
+22.) ***What is the class of t_result?***
+
+```{r}
+class(t_result)
+```
+
+*****
+
+23.) ***Write code to calculate the number of students in the Mount Holly Elementary Data who are in the fourth grade.***
+ 
+
+```{r}
+sum(Student_Data$Grade=="Grade 4")
+```
+_The number of students in the Mount Hollow Elementary Data who are in the fourth grade is_
+
+$$\textbf{Grade 4 = 74 students}$$
+
+*****
+
+24.)  ***Add a column to the Student_Data that contains each students Z score.***
+
+```{r}
+zscore<-(Student_Data$Score - mean(Student_Data$Score))/sd(Student_Data$Score)
+Student_Data_New<-cbind(Student_Data,zscore=zscore)
+Student_Data_New
+```
+
+
+*****
+
+25.) ***Write code to calculate how many of the Z scores are positive.***
+
+```{r}
+sum(Student_Data_New$zscore>0)
+```
+$$ 108~~\text{z scores are positive}$$
+
+*****
+
+26.)  ***Write code to determine if any students in this school have a first name of “Trevor”***
+
+
+```{r}
+"Trevor" %in% Student_Data$First.Name
+```
+
+
+
+
+
+
+
+
+*****
