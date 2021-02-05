@@ -1,0 +1,175 @@
+---
+title: "My R Style Guide"
+author: "Geophrey Odero"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_notebook
+---
+
+
+```{r}
+options(width=80)
+```
+*****
+
+### ***Naming Conventions***
+
+####  File Names:
+  * Use a meaningful and descriptive names
+  * End in .R
+  * Preferably use camelCase
+  * If necessary, separate words by _ not .
+  * Avoid using special characters in file names - stick with numbers, letters, -, and _
+```r
+# Good
+getData.R
+
+# Acceptable
+get_data.R
+```
+#### Identifiers
+  * Use meaningful and descriptive names
+  * For functions, strive to use verbs in names
+  * Variables should preferably adhere to camelCase. But for backward compatibility with  historical functions, all lower case letters and words separated with . is also accepted
+Function and class names should adhere to camelCase
+  * Do not use . with class names due to potential confusion with S3 method declarations
+  * Do not use _ or - with identifiers
+```r
+# Good
+pcaEmbedding  # variable
+getPcaEmbedding <- function()  # function
+```
+
+*****
+
+### ***Syntax***
+
+#### General Syntax
+
+  * To indent, use 4 spaces not tabs
+  * For assignments, use <- not =
+  * Do not use ;
+```r
+# Good 
+x <- 23
+y <- 12
+```
+
+#### Spacing
+  * Place spaces around all binary operators such as =, +, -, <-, etc.
+  * Place a space before the (, except in a function call
+  * Use space after a comma
+  
+***
+
+
+```r
+# Good
+someFunction <- function(a, b, c, d = 100) {
+    if (a < d) {
+        a <- (b + c) * d
+    }
+}
+
+# Bad
+someFunction <- function(a,b,c,d= 100) { 
+  if(a<d) a<-(b+c)*d 
+}
+```
+
+*****
+
+#### Commas
+      
+* Always put a space after a comma, never before, just like in regular English.
+
+```r
+# Good
+x[, 1]
+
+# Bad
+x[,1]
+x[ ,1]
+x[ , 1]
+```    
+
+#### Curly Braces
+     * Do not place { on its own line
+     * Place } on its own line unless followed by else
+     * Surround else statements with curly braces
+     
+```r
+# Good
+if (a < d) {
+    a <- (b + c) * d
+} else {
+    a <- d
+}
+
+# Bad
+if (a < d) 
+{
+    a <- (b + c) * d
+} else a <- d
+```
+
+
+#### Parentheses
+
+* Do not put spaces inside or outside parentheses for regular function calls.
+
+```r
+# Good
+mean(x, na.rm = TRUE)
+
+# Bad
+mean (x, na.rm = TRUE)
+mean( x, na.rm = TRUE )
+```
+
+
+#### Line Length
+     * Keep each line less than 80 characters
+     * Align lines by shared features like parameters if possible
+     
+```r
+# Good
+someFunction(optionA = alpha,
+             optionB = bravo,
+             optionC = charlie,    
+             optionD = delta)
+
+# Acceptable
+someFunction(optionA = alpha,
+    optionB = bravo, optionC = charlie,    
+    optionD = delta)
+
+# Bad
+someFunction(optionA = alpha, optionB = bravo, optionC = charlie, optionD = delta)
+```
+
+*****
+
+### ***Organization***
+
+It’s hard to describe exactly how you should organize your code across multiple files. I think the best rule of thumb is that if you can give a file a concise name that still evokes its contents, you’ve arrived at a good organisation. But getting to that point is hard.
+
+#### Internal Structure
+
+ * Use commented lines of - and = to break up your file into easily readable chunks.
+
+```r
+# Load data ---------------------------
+
+# Plot data ---------------------------
+```
+
+#### Commenting
+
+   * General comments should be identified with # followed by a space
+   * Inline comments need 2 spaces before the #
+   * Function and object descriptions should adhere to roxygen guidelines
+   * Separate function comments and function code with blank line
+   * Functions from previous code using 2 blank lines
+   * My main objective is to sharpen my R skills and use the knowledge gained for data analysis & simulations in my research.
+
+*****
