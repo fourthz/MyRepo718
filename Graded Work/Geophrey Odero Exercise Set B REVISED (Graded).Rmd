@@ -1,0 +1,492 @@
+---
+title:  "EDRM 718 Sp21: Exercise Set B"
+author:  "Geophrey O. Odero"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_notebook
+---
+
+
+```{r include=FALSE}
+# these libraries are good when it comes to plots and data manipulation
+
+library(here)
+library(plyr)
+library(gtools)
+library(ggplot2)
+```
+
+*****
+**Directions:**: _Complete this assignment in an R notebook. Make sure to number each item, but it is optional for you to copy the prompt for the item. Make sure that your notebook is neat and organized and that all your code chunks run without error, even after clearing the environment. Include both the exercise set letter and your name in your notebook filename. When you are finished, push your repository to GitHub. (Four points per item unless stated otherwise.)_
+
+
+*****
+
+Question #1). **Create a vector called Vector_A that contains 100 randomly selected values from a normal distribution that has a mean of 50 and a standard deviation of 10.**
+
+```{r echo=TRUE}
+# Let's generate  Vector_A of random numbers from a normal
+# distribution
+
+Vector_A<-rnorm(100,mean=50,sd=10)
+Vector_A
+```
+
+Question #2).  **Create Vector_B by selecting the first, third, and eighth elements of Vector_A.**
+
+```{r echo=TRUE}
+# selecting 1st, 3rd and 8th element
+
+Vector_B<-Vector_A[c(1,3,8)]
+Vector_B
+```
+
+*****
+
+Question #3). **Create Vector_C by selecting all the elements of Vector_A except for the 10th and 15th elements**
+
+
+```{r echo=TRUE}
+# Select all elements except 10th and 15th element
+
+Vector_C<-Vector_A[-c(10,15)]
+Vector_C
+```
+
+
+*****
+
+Question #4). **Create Vector_D by selecting all the elements of Vector_A that are less than 40**
+
+
+```{r echo=TRUE}
+# Select all numbers less than 40
+
+Vector_D<-Vector_A[Vector_A<40]
+Vector_D
+```
+
+*****
+
+Question #5). **Find the length of Vector_D**
+
+```{r echo=TRUE}
+# Finding length of Vector_D
+
+length(Vector_D)
+```
+
+*****
+
+Question #6). **Count how many elements of Vector_A are positive.**
+
+```{r echo=TRUE}
+# count number of elements greater than zero
+
+sum(Vector_A>0)
+```
+
+*****
+
+Question #7). **Find the minimum and maximum values in Vector_A.**
+
+```{r echo=TRUE}
+# Find Minimum and maximum values (use min(vector) and max(Vector))
+
+Min_Vector_A<-min(Vector_A)
+Min_Vector_A
+Max_Vector_A<-max(Vector_A)
+Max_Vector_A
+```
+
+*****
+
+Question #8). **Create Vector_E so that it has the same values as Vector_A, but in numerical order**
+
+```{r}
+# ording elements of the vector from smallest to largest
+
+Vector_E<-sort(Vector_A)
+Vector_E
+```
+
+*****
+
+Question #9). **Create Vector_F so that it contains even numbers from 2 to 100.**
+
+```{r echo=TRUE}
+# Creating a vector named F containg even numbers 2 to 100
+
+Vector_F<-seq(2,100,2)
+Vector_F
+```
+
+*****
+
+Question #10). **Create Vector_G so that it is Vector_F in reverse order**
+
+```{r echo=TRUE}
+# Creating Vector_G- sorting from largest to smallest
+
+Vector_G<-sort(Vector_F,decreasing = TRUE)
+Vector_G
+```
+
+*****
+
+Question #11). **Create Vector_H by adding Vector_F to Vector_G.**
+
+```{r echo=TRUE}
+# Creating Vector_H by adding two vectors F and G
+
+Vector_H<-Vector_F + Vector_G
+Vector_H
+```
+
+*****
+
+Question #12). **Create the three matrices shown below. Name these matrices A, B, and C, respectively.**
+
+```{r}
+# Creating matrices A, B and C
+
+A<-matrix(c(4,2,2,3,6,6),nrow=3,ncol=2,byrow=T)
+A
+B<-matrix(c(7,3,2,5),nrow=2,ncol=2,byrow=T)
+B
+C<-matrix(c(8,5,1,1,3,4,1,7,2),nrow=3,ncol=3,byrow=T)
+C
+```
+
+*****
+
+Question #13). **Extract the value in the first row and second column of A and store it in my_value**
+
+```{r}
+# Extracting the element in first row and 2nd column values of the matrix
+
+my_value<-A[1,2]
+my_value
+```
+
+*****
+
+Question #14). **Extract the bottom two rows of A to create a new matrix, D.**
+
+```{r}
+# Extracting the 2 bottom rows (deleting row 1)
+
+D<-A[-1,]
+D
+```
+
+
+Question #15). **Name the columns of A with Var_1 and Var_2.**
+
+```{r}
+# naming the columns
+
+colnames(A)<-c("Var_1","Var_2")
+A
+```
+
+*****
+
+
+Question #16). **Name the rows of A with Bob, Mary, and Shameka**
+
+```{r}
+# naming the rows 
+
+rownames(A)<-c("Bob","Mary","Shameka")
+A
+```
+
+*****
+
+QUestion #17). **Transpose matrix C and store the result in a new matrix, E.**
+
+```{r}
+# Transposing a matrix C
+
+E<-t(C)
+E
+```
+
+*****
+
+Question #18). **Change matrix E by adding 15 to every element.**
+
+```{r}
+# Adding a constant to a matrix 
+
+new_E<-15+E
+new_E
+```
+
+*****
+
+### **Use the HSB2 data for items 19 through 24**
+
+```{r}
+# Uploading the data-----------------------------
+
+
+hsb2 <-read.csv("C:/Users/jeffo/OneDrive/Desktop/R projects/My Journey with R/Data/hsb2.csv")
+hsb2
+```
+
+Question #19). **Read the HSB2 data into an object and put the score data for the five tests into a matrix**
+
+```{r}
+# select all variables and putting the score data into a matrix (test_scores)
+
+test_scores<-as.matrix(hsb2[,7:11])
+
+# Lets see the first 10 rows
+
+test_scores[1:10,]
+```
+
+*****
+
+Question #20). **Transpose the score matrix and save it in another object.**
+
+
+*****
+
+```{r}
+# Transposing the matrix and showing first 10 columns
+
+test_scores_T<-t(test_scores)
+test_scores_T[,1:10]
+```
+
+Question #21). **Calculate the means for the five tests and store these, with appropriate names, in a vector called test_means.**
+
+```{r}
+# means for the five tests (col 7 to 11)
+
+test_means<-colMeans(test_scores)
+test_means
+```
+
+
+*****
+
+Question #22). **Create two matrices so that one contains the test score data for public school students and the other contains the test score data for private school students.**
+
+```{r}
+# Public score data (show first 10 observations)
+
+# lets get test scores by schytp
+
+test_scores_schtyp<-hsb2[,c(5,7:11)]
+
+Public_Schtyp<- subset(test_scores_schtyp, schtyp=="1")
+Public_Score_data<-as.matrix(Public_Schtyp)
+Public_Score_data[1:10,]
+
+# Private school score data (show first 10 observations)
+
+Private_Schtyp<- subset(test_scores_schtyp, schtyp=="2")
+Private_Score_data<-as.matrix(Private_Schtyp)
+Private_Score_data[1:10,]
+
+```
+*****
+
+Question #23). **Store the scores for the first 25 students in each of the two matrices in an array.**
+
+```{r}
+# first 25 students in each of the two matrices
+
+First_25_private<-Private_Score_data[1:25,]
+First_25_private
+
+First_25_public<-Public_Score_data[1:25,]
+First_25_public
+
+# Storing the scores in an array (a vector of matrices)
+
+Scores_data<-array(c(First_25_private,First_25_public),dim=c(25,6,2))
+Scores_data
+```
+
+*****
+
+Question #24). **Name the test type and school dimensions in the array. If you had already named these when you created the array, do the opposite. Eliminate the names.**
+
+```{r}
+col_names<-c("schtyp", "read",	"write",	"math",	"science",	"socst")
+dimnames(Scores_data)<-list(NULL, col_names,NULL)
+col_names<-col_names
+Scores_data
+```
+
+*****
+
+Question #25). **Create a factor, student_class, to indicate whether a student is a freshman, sophomore, junior, or senior. Assume that you have five students in each classification. Make sure to include the classification names.**
+
+```{r}
+student_class<-factor(c("freshman","freshman","freshman","freshman",
+                        "freshman","sophomore","sophomore","sophomore",
+                        "sophomore","sophomore","junior","junior","junior",
+                        "junior","junior","senior","senior","senior","senior",
+                        "senior"))
+```
+
+*****
+
+Question #26). **Change the levels of student_class to “1st year”, “2nd year”, “3rd year”, and “4th year”.**
+
+```{r}
+# changing factor level names
+
+levels(student_class)<-c("1st year", "2nd year", "3rd year","4th year")
+levels(student_class)
+```
+
+*****
+
+Question #27). **Use the subset operator with student_class to create a new_student_class that does not contain the 1st year students.**
+
+```{r}
+# using the subset operator [] and !is.na - i dont want to see NA sort
+
+student_class_2<-sort(student_class[!is.na(droplevels(student_class,
+                                          exclude="1st year"))])
+student_class_2
+```
+
+*****
+
+Question # 28). **Drop the unused level from new_student_class**
+
+```{r}
+# using droplevels function to drop the 1st year level(unused)
+
+student_class_2<-droplevels(student_class_2,exclude="1st year")
+student_class_2<-sort(student_class_2)
+levels(student_class_2)
+```
+
+
+*****
+
+### **Use the HSB2 data for items 29 through 32.**
+
+Question #29). **Read in the HSB2 data and create a factor, with appropriate labels, for each variable that should be a factor. If there is order to the variable values, make sure to make it an ordered factor.**
+
+```{r}
+# data already loaded---------------
+
+# data attributes
+
+str(hsb2)
+
+# convert intergers to factors
+
+hsb2$id<- factor(hsb2$id)
+
+# For clarity I will change 0=male and 1=female
+
+hsb2$female<- factor(hsb2$female,labels = c("Male","Female"))
+hsb2$race<- factor(hsb2$race)
+
+# For clarity I will change 1=low, 2=medium and 3=High
+hsb2$ses<- factor(hsb2$ses,labels = c("low","Medium","High"))
+hsb2$schtyp<- factor(hsb2$schtyp)
+hsb2$prog<- factor(hsb2$prog)
+```
+
+* Mean of science scores by gender
+
+```{r}
+# First by gender
+
+Science_score_gender<-with(hsb2, tapply(science, female, mean))
+round(Science_score_gender,digits=2)
+```
+
+* Mean of science scores by SES
+
+```{r}
+# Second by SES
+
+Science_score_ses<-with(hsb2, tapply(science, ses, mean))
+round(Science_score_ses,digits=2)
+```
+
+```{r}
+#comb_sci_score<-aggregate(science~female+ses, hsb2, mean)
+comb_sci_score<-with(hsb2, tapply(science, list(female, ses), mean))
+round(comb_sci_score,digits=2)
+```
+*****
+
+Question #31). **Create a new well-labeled factor variable that indicates which quartile each student is in based on math score.**
+
+```{r}
+## cut math scores into quartiles
+
+hsb2$math_quart <- cut(hsb2$math,
+                       breaks = c(0,
+                                  quantile(hsb2$math)[2],
+                                  quantile(hsb2$math)[3],
+                                  quantile(hsb2$math)[4],
+                                  Inf),
+                       labels = c("Q1",
+                                  "Q2",
+                                  "Q3",
+                                  "Q4"))
+hsb2$math_quart
+```
+
+*****
+
+Question #32). **Sort the data based on math score.**
+
+```{r}
+# sorting data based on math score and looking at the first 10 scores
+
+math_hsb2_order<-hsb2[order(hsb2$math),]
+math_hsb2_order[1:10,]
+```
+
+
+*****
+
+Question #33). **Randomly select 1000 scores from a normal distribution with a mean of 100 and a standard deviation of 15. Save these scores in _rand_norms_.**
+
+```{r}
+# generate 1000 random numbers (mean=100,sd=15) and showing partial output
+
+rand_norms<-rnorm(10000, mean = 100, sd = 15)
+rand_norms[1:25]
+```
+
+*****
+
+Question #34). **Create a factor that categorizes these random numbers into four bins: 0 to 80, 80 to 100, 100 to 120, and over 120. Provide reasonable labels.**
+
+```{r}
+# creating factor and four bins with labels
+
+rand_norms_categories <- cut(rand_norms, c(0, 80, 100, 120, Inf))
+```
+
+*****
+
+Question #35). **Show a table of frequencies of the number in each bin.**
+
+```{r}
+# Frequency Table
+
+table(rand_norms_categories)
+```
+
+***
+
+**Very nice work!**
+
+**140/140**
