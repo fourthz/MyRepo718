@@ -1,0 +1,201 @@
+---
+title: "EDRM 718 Sp21: Project B"
+author:  "Geophrey O. Odero"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_notebook
+---
+
+
+```{r include=FALSE}
+# Important packages
+library(tidyverse)
+library(here)
+library(kableExtra)
+# source needed functions
+source(here("C:/Jeff/Github/Edrm718Sp21/Projects/Odero_Functions", "my_rater_STATS.R"))
+source(here("C:/Jeff/Github/Edrm718Sp21/Projects/Odero_Functions", "my_rater_CLPS.R"))
+source(here("C:/Jeff/Github/Edrm718Sp21/Projects/Odero_Functions", "my_func_raters_ranks.R"))
+source(here("C:/Jeff/Github/Edrm718Sp21/Projects/Odero_Functions", "my_rater_CLPS2.R"))
+```
+
+
+*****
+
+**_Directions_: This project will require you to begin a collection of function scripts in your repo, write functions for your collection, and source these in to demonstrate how they work. These first functions will focus on preparing to conduct research projects that involve raters. Raters are often employed in research projects to rate performances, products, behaviors, and other variables that are best measured through observation.Researchers who recruit raters are responsible for training to try to achieve a high degree of consistency.They must also verify this consistency and take steps when interrater reliability is deemed to be too low. Put your function folder and notebook in your repo and push these to GitHub prior to the deadline.(100 points possible)**
+
+*****
+Question #4). **Write a function that requires a data frame of ratings as input (with raters in columns and observations in rows) and returns an ordered named integer vector that is the ranked placement based on the sum of the ratings, with the highest sum placed as “1”, next highest as “2”, and so on. Observations with the same sum should receive the same placement. For example, suppose that Row1 received ratings of 5, 6, and 5; Row2 received ratings of 5, 4, 4; Row3 received ratings of 3, 2, 3; and Row4 received ratings of 4, 5, 4. Your function should return an integer vector of 1, 2, 2, 3, where the names associated with these vector items are Row1, Row2, Row4, and Row 3, respectively. (Suggestion: When you are using this function, name the rows of your data frame with the names of the units being rated to make it easy to determine placement without having to match the row numbers to another data set.)**
+
+```{r}
+my_ranks<-function(data){
+  rownames(data)<-row.names(data)
+  tots<-apply(data[,2:ncol(data)],1,sum,na.rm = TRUE)
+  ranks<-as.numeric(factor(desc(rank(tots))))
+  tots1<-cbind.data.frame(tots, ranks)
+  return(tots1) 
+}
+```
+
+_Function created and saved on functions folder_.
+
+
+*****
+
+Question #5). **Create a notebook to analyze and report on the music performance data. These data are from the scoring of eight raters who judged high school orchestras in a competition. Source in your functions. Study the consistency of raters using (a) the original ratings, (b) collapsing into three categories in groups of two, as described in the example above, and (c) collapsing into five categories by combining the somewhat weak and somewhat strong categories into a single not weak or strong category. You may eliminate one or two raters if it is justified based on your analysis. Once you have decided on the final rater pool, determine which orchestras win first, second, and third place. In the past when it was “too close to call,” judges have placed more than one school orchestra in some award categories. You may do the same if you deem that best. Find and install a package to help you create attractive tables to include in your notebook when you present the statistics to justify rater choice and school awards. A substantial portion of your grade on this report will depend on a well-organized and neat presentation**
+
+```{r include=FALSE}
+school_ratings<-read.csv("C:/Jeff/Github/Edrm718Sp21/Projects/Data/Music Performance Data.csv",row.names="School")
+```
+
+(a) Consistency of raters using original ratings - Coding Options
+
++ 1 - very weak performance
++ 2- weak performance
++ 3- somewhat weak performance
++ 4 - somewhat strong performance
++ 5- strong performance
++ 6 - very strong performance
+
+```{r echo=FALSE}
+my_stats<-rater_statistics(school_ratings)
+my_stats %>%
+  kbl() %>%
+  #kable_minimal()
+  kable_material_dark()
+  #kable_styling()
+```
+
+_Looking at the summary statistics, raters D (mean=28.57) and E (mean =7.79) mean ratings are not consistent with other raters. Thus, there may be need for further training or may need to be eliminated (as a last resort)._
+
+*****
+
+(b.)  Collapsing into three categories - Coding Options
+
++ 1 - weak performance
++ 2 - moderate performance
++ 3 - strong performance
+
+```{r echo=FALSE}
+new_school_ratings<-my_rater_clps(school_ratings)
+my_new_stats1<-rater_statistics(new_school_ratings)
+my_new_stats1 %>%
+  kbl() %>%
+  #kable_minimal()
+  kable_material_dark()
+```
+
+_By collapsing the ratings into 3 categories, the result (the summary statistics), shows a slight improvement/boost in the mean ratings of raters.  However, rater E (mean =13.64) mean ratings is not consistent with other raters. Thus, there may be need to eliminate rater E._
+
+*****
+
+
+
+(c) Collapse into five categories - Coding Options
+
++ 1 - very weak performance
++ 2- weak performance
++ 3- not weak
++ 4 - strong performance
++ 5 - very strong performance
+
+```{r echo=FALSE}
+new_ratings2<-my_rater_clps2(school_ratings)
+my_new_stats2<-rater_statistics(new_ratings2)
+my_new_stats2 %>%
+  kbl() %>%
+  #kable_minimal()
+  kable_material_dark()
+```
+
+
+
+
+_By collapsing the ratings into 5 categories, the result (the summary statistics), there is no improvement/boost in the mean ratings of raters compared to previous three categories.  However, rater E (mean =12.34) mean ratings is not consistent with other raters. Thus, there may be need to eliminate rater E.  Rater D may require further training._
+
+*****
+
+# Final pool of raters:
+
+```{r echo=FALSE}
+final_school_ratings<-my_rater_clps(school_ratings)
+final_new_stats<-rater_statistics(final_school_ratings[,-c(4:5)])
+final_new_stats %>%
+  kbl() %>%
+  #kable_minimal()
+  kable_material_dark()
+```
+
+
+
+
+By Collapsing into three categories - Coding Options:
+
++ 1 - weak performance
++ 2 - moderate performance
++ 3 - strong performance
+
+_Based on summary statistics of rater-agreements, the proposed pool of raters include A,B,C,F,G and H (raters D and E eliminated).  These raters mean ratings are consistent with each other.  Mean ratings ranging between 73.64 to 82.73._
+
+*****
+
+**Deciding on winners (1st, 2nd, and 3rd place)**
+
+```{r echo=FALSE}
+Winners<-new_school_ratings[,-c(4:5)]
+Winners %>%                        # Compute row sums
+  replace(is.na(.), 0) %>%
+  mutate(sum = rowSums(.))%>%
+  kbl(caption = "Who won the Orchestra") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+```
+
+_By Collapsing into three categories - Coding Options_:
+
++ 1 - weak performance
++ 2 - moderate performance
++ 3 - strong performance
+
+_Based on the pool of raters A,B,C,F,G and H (raters D and E eliminated), here are the winners:_
+
+1) **First position**
+  + Bedford Falls High School
+  + Mayfield High School
+  + Pearl Bailey High School
+  
+2) **Second position**
+  + Deffry Vale High School
+  
+3) **Third position**
+  + Bob LaBrea High School
+  + Buchanan High
+  + North High
+
+
+
+*****
+
+_Here is when I use my user defined function to sum the rows (of ratings) and get the ranks based on sums_. 
+
+```{r echo=FALSE}
+Awards<-my_ranks(Winners)
+Awards %>%
+  kbl(caption = "Rankings Orchestra") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+```
+
+
+_Based on the pool of raters A,B,C,F,G and H (raters D and E eliminated), here are the winners:_
+
+1) **First position**
+  + Bedford Falls High School
+  + Mayfield High School
+  + Pearl Bailey High School
+  + Twin Peaks High School
+  
+2) **Second position**
+  + Deffry Vale High School
+  
+3) **Third position**
+  + Bob LaBrea High School
+  + Buchanan High
+  + North High
