@@ -1,0 +1,27 @@
+Geophrey Odero EDRM 718 GitHub Repo
+
+You obviously have learned how to create and clone a repo, but you have not
+done much in the way of organization that will support a large project. There
+are no folders (I stated that I require a data folder that contains all data).
+You may want to consider, for example, a folder for data files, notebooks, and
+instructor notes.
+
+You also do not have a .gitignore file. Currently you have a number of
+non-essential and non-text files in your repo. You should have a .gitignore
+that minimally contains:
+
+*.html
+*.xlsx
+*.pdf
+
+Remember that you can do this organization on your computer at any time and
+then just push the revised repo.
+
+35/50
+
+
+***
+
+Much better!
+
+48/50
