@@ -1,0 +1,519 @@
+---
+title:  "EDRM 718 Sp21: Exercise Set C"
+author:  "Geophrey O. Odero"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_notebook
+---
+
+
+```{r include=FALSE}
+# these libraries are good when it comes to plots and data manipulation
+
+if(!require(devtools)) install.packages("devtools")
+library(tidyverse)
+library(here)
+library(plyr)
+library(gtools)
+library(ggplot2)
+library(cowplot)
+library(rlang)
+library(ggpubr)
+library(tibble)
+```
+
+
+
+*****
+**Directions:** _:Complete this assignment in an R notebook. Make sure to number each item, but it is optional for you to copy the prompt for the item. Make sure that your notebook is neat and organized and that all your code chunks run without error, even after clearing the environment. Include both the exercise set letter and your name in your notebook filename. When you are finished, push your repository to GitHub. (Four points per item unless stated otherwise.)_
+
+
+*****
+
+
+```{r}
+# Load data--------------
+
+# hsb2 <- read.csv(here("Data", "hsb2.csv"))
+
+hsb2 <- read.csv("C:/Jeff/Github/Edrm718Sp21/Data/hsb2.csv")
+hsb2
+```
+
+*****
+
+Question #1). **Create a list, my.courses, that contains three vectors: one with the numbers (e.g. EDRM 718) of the courses you are taking this semester, one with the names of the instructors of these courses (in order), and one with the credits you’ll earn in the course (again, in order).**
+
+
+```{r}
+
+# We can use the list function to create a list.
+
+my_courses <- list(c("EDRM 718", "EDRM 728","EDRM 816"),
+                   c("Mike Seaman", "C.Distefano", "Liu Steven"),
+                   c("3 Credit hrs", "3 Credit hrs", "3 Credit hrs"))
+
+my_courses
+```
+
+*****
+
+
+QUestion #2). **Use the HSB2 data. Store test score matrices (include all five test scores) by SES in a list. Your matrix names should be indicative of SES level so that when you look at the list you can tell which matrix corresponds to each SES level. Once your list is set up, use it to plot the relationship of math score (response variable, so placed in the vertical direction) to reading score (explanatory variable) for each SES level. Make sure to label your axes. Also provide a title that clearly identifies each plot. Your plot should also include text that provides the correlation among the variables. (Note: Your script should make this automatic. You should not have to change the script when the correlation changes.) (25 points)**
+
+
+
+
+```{r}
+hsb2_low <- as.matrix(hsb2[hsb2$ses == 1, 7:11])
+hsb2_med <- as.matrix(hsb2[hsb2$ses == 2, 7:11])
+hsb2_high <- as.matrix(hsb2[hsb2$ses == 3, 7:11])
+
+row.names(hsb2_low) <- NULL
+row.names(hsb2_med) <- NULL
+row.names(hsb2_high) <- NULL
+
+hsb2_list <- list(Low = hsb2_low,
+                  Medium = hsb2_med,
+                  High = hsb2_high)
+
+```
+
+Here are the plots.
+
+```{r}
+par(mfrow=c(2,2))
+
+plot(x = hsb2_list$Low[ , 1],
+     y = hsb2_list$Low[ , 3],
+     main = paste("Reading vs Math Score",
+                  names(hsb2_list[1]),
+                  "(Low SES)"),
+     xlab = "Reading Score",
+     ylab = "Math Score")
+
+text(35, 70, paste("r = ", round(cor(x = hsb2_list$Low[ , 1],
+                                     y = hsb2_list$Low[ , 3]),
+                                 2)))
+
+plot(x = hsb2_list$Medium[ , 1],
+     y = hsb2_list$Medium[ , 3],
+     main = paste("Reading vs Math Score",
+                  names(hsb2_list[1]),
+                  "(Medium SES)"),
+     xlab = "Reading Score",
+     ylab = "Math Score")
+
+text(35, 70, paste("r = ", round(cor(x = hsb2_list$Medium[ , 1],
+                                     y = hsb2_list$Medium[ , 3]),
+                                 2)))
+
+plot(x = hsb2_list$High[ , 1],
+     y = hsb2_list$High[ , 3],
+     main = paste("Reading vs Math Score",
+                  names(hsb2_list[1]),
+                  "(High SES)"),
+     xlab = "Reading Score",
+     ylab = "Math Score")
+
+text(40, 70, paste("r = ", round(cor(x = hsb2_list$High[ , 1],
+                                     y = hsb2_list$High[ , 3]),
+                                 2)))
+```
+
+
+
+*****
+
+Question #3). **Use the sample function to randomly select three classmates. Consider these classmates and  yourself as a learning group of four students. Create a data frame for your learning group that includes the following variables: first name, last name, email address, program of study, number of years in current program of study. (You can email your selected classmates for this information. You will find email addresses on a previous Research Café post.) After the data frame is created, add two more variables: one that is the name again, but in “first name, last name” format (this variable should be created from your original data frame and should be placed right after the first name and last name variables) and a logical (also created from existing data and not “by hand”) to indicate whether the group member has been in their program of study more than three years. (10 points) **
+
+```{r}
+#sample (c("Cade, Abrams","Talal, Alshehri","Ali, Azughaibi", "Hazza, Bin Hazza",
+        #  "Asiye, Demir","Shelby, Gonzales","Hui, Jiang", "Olivia, Lewis",
+         # "Robyn, Pernetti","Mohammed, Quasem","Dana, Sox","Bryan, Terlizzi",
+          #"Thomas, Toomey","Huijuan, Wang","Erin, Wilson"),
+        #size=3, replace =F)
+
+library(tibble)
+
+learning_group <- data.frame(first_name = c("Bryan",
+                                      "Geophrey",
+                                      "Hazza",
+                                      "Olivia"),
+                       last_name = c("Terlizzi",
+                                     "Odero",
+                                     "Bin Hazza",
+                                     "Lewis"),
+                       email = c("terlizzb@email.sc.edu",
+                                 "godero@mailbox.sc.edu",
+                                 "BINHAZZA@email.sc.edu",
+                                 "oliviaLEWIS@email.sc.edu"),
+                       program = c("Physical Education(PhD)",
+                                   "Edrm (PhD)",
+                                   "Language and Literacy(PhD)",
+                                   "Counseling and PE(PhD)"),
+                       years = c(2, 3, 1, 2))
+full_name<- paste(learning_group$first_name, " ", learning_group$last_name)
+learning_group$program_years <- (learning_group$years > 3)
+learning_group_new<- add_column(learning_group, full_name, .after = 2)   
+learning_group_new
+#############################################
+```
+
+```{r}
+first_name<- c("Bryan", "Geophrey", "Hazza", "Olivia")
+last_name<- c("Terlizzi","Odero","Bin Hazza","Lewis")
+email_address<-c("terlizzb@email.sc.edu","godero@mailbox.sc.edu",
+                 "BINHAZZA@email.sc.edu","oliviaLEWIS@email.sc.edu")
+program_type<-c("Physical Education(PhD)","Edrm (PhD)"," Language and Literacy(PhD)",
+                "Counselin and PE(PhD)")
+num_years<-c(2,3,1,2)
+learn_group_data <- data.frame(first_name,last_name,email_address,program_type,num_years)
+learn_group_data<-as_tibble(learn_group_data)
+learn_group_data
+# New column vector
+
+full_name<- c("Bryan Terlizzi","Geophrey Odero","Hazza Bin Hazza","Olivia Lewis")
+
+ # Apply add_column function by name
+
+Learn_group_new<-add_column(learn_group_data, full_name, .after = "last_name") 
+Learn_group_new<-as_tibble(Learn_group_new)
+Learn_group_new
+mutate(Learn_group_new, Greater.than3years= ifelse(num_years>3, "Yes", "No"))
+```
+
+*****
+
+Question #4). **Write a script that (a) loads the Mount Juniper Elementary data into a data frame, (b) checks the score column to determine if there are missing data, and (c) prints either there are no missing data or there are missing data, depending on which of these is true.**
+
+
+ a. The data loaded successfully
+ 
+```{r}
+# (a) Load data------------
+
+Mt_Juniper_data <- read.csv("C:/Jeff/Github/Edrm718Sp21/Exercise Sets/Data/Mt_Juniper_data.csv")
+class(Mt_Juniper_data)
+```
+ 
+ b. The score column has some missing values.
+ 
+```{r}
+ 
+# (b) Check if score column has missing values
+
+is.na(Mt_Juniper_data$Score)
+```
+ 
+ 
+ c. Using "anyNA(data)" returned true: yes there are missing values.
+ 
+```{r}
+# (c) Using the fxn "anyNA# returns "TRUE" if there are 
+     # any missing values or FALSE no missing values
+
+anyNA(Mt_Juniper_data$Score)
+```
+
+
+*****
+
+
+Question #5). **Select either (a) or (b) for this exercise., depending on whether you are familiar with analysis of variance with a categorical explanatory variable.**
+
+(a) _Write a script to conduct an analysis of variance to determine if you can infer different score means for the three different grade levels at Mount Juniper Elementary. (Caution: Look at the degrees of freedom for grade level to make certain you are doing this correctly.)_
+
+Lets visualize the data
+
+
+```{r}
+# convert Grade to factor and then fit the ANOVA model
+Mt_Juniper_data$Grade<- factor(Mt_Juniper_data$Grade)
+str(Mt_Juniper_data)
+```
+
+
+
+```{r}
+# Lets visualize the data
+
+boxplot(Mt_Juniper_data$Score~Mt_Juniper_data$Grade,xlab = "Grade",ylab = "Score")
+
+
+```
+
+
+ANOVA 
+
+
+```{r}
+# fit the model
+
+anova_results<-anova(lm(Mt_Juniper_data$Score~ Mt_Juniper_data$Grade))
+anova_results
+```
+
+
+
+```{r}
+p=0.90
+df1<-2
+df2<-180
+qf(p, df1, df2)
+```
+
+
+_The degrees of freedom for level_
+
+$$\textbf{df}=k-1=3-1=2$$
+
+_F-statistic is **less than** the F-critical value, so we fail to reject the null hypothesis and conclude that there is not enough evidence that score means are different_.
+
+
+
+(b) **Write a script that will create a subset with only grades four and five from the Mount Juniper Elementary data, then conduct at test to determine if you can infer different score means for these two grade levels.**
+
+```{r}
+# creating subsets of grade 4 and grade 5 only
+
+Mt_Juniper_Grade<- subset(Mt_Juniper_data, Grade != "3")
+Mt_Juniper_Grade
+str(Mt_Juniper_Grade)
+levels(droplevels(Mt_Juniper_Grade$Grade))
+# Mt_Juniper_Grade
+
+t_results<-t.test(Mt_Juniper_Grade$Score~Mt_Juniper_Grade$Grade)
+t_results
+```
+_The p-value of the test is 0.6802, which is greater than the significance level alpha = 0.05. Fail to reject $H_0$. We can conclude that mean of scores for grade 4 is not significantly different from mean of scores for grade 5.  The 95\% confidence interval contains zero implying no significant difference._
+
+
+
+*****
+
+Question #6). **Add lines to your script to store your ANOVA or t test results in an object and then examine these results and correctly print “Statistically significant” or “Not statistically significant.” Use $\alpha=0.05$. (Note: Avoid showing a warning message. If you need help, head to the Research Café.)**
+
+```{r}
+# Lets store the t-test results in an object and examine them
+
+my_ttest_results<-list(estimate=(c(grade4=70.00,grade5=69.23)),
+                       alpha=0.05,
+                       p_value=0.6802,
+                       decision="not statistically significant",
+                       confidence_interval=c(-2.9,4.4))
+# Lets print the decision
+
+my_ttest_results$decision
+my_ttest_results
+```
+
+
+*****
+
+Question #7). **Add lines to your script to add a “Results” attribute to your object that contains the words “Statistically significant” or “Not statistically significant.” Use $\alpha= 0.05$. (Again, avoid a warning message.)**
+
+```{r}
+attributes(anova_results)$Results <- if_else(anova_results$`Pr(>F)`[1] > .05,
+                        "Not Statistically Significant",
+                        "Statistically Significant")
+
+
+attributes(anova_results)
+
+```
+
+
+*****
+
+Question #8). **Consider a population of normally distributed scores with a mean of 100 and a standard deviation of 15. Write a script to draw 1,000 random samples, each of size 40, from this population. Calculate and store each mean in a vector of means. Calculate the mean of the sample means. Determine the difference between the true mean of 100 and the mean of the sample means. What statistical characteristic of the mean does this illustrate? (10 points) **
+
+```{r}
+# Specify  the sample size and number of samples
+
+n <- 40
+reps<- 1000
+
+# perform random sampling
+
+ran_samples<- replicate(reps, rnorm(n,mean=100,sd=15)) # 40 x 1000 sample matrix
+
+# True mean
+
+true_mean<-100
+
+# compute sample means
+
+sample_Means<-colMeans(ran_samples)
+
+# Lets see the distribution
+
+# Plot the density histogram
+hist(sample_Means, 
+     ylim = c(0, 0.4), 
+     col = "steelblue" , 
+     freq = F, 
+     breaks = 20)
+
+# check that 'sample_Means' is a vector
+
+is.vector(sample_Means)
+
+# compute mean of sample means
+
+mean_samples<-mean(sample_Means)
+
+
+
+diff_Means<-true_mean-mean_samples
+round(diff_Means,1)
+```
+
+_The sample mean is an unbiased estimator of the population mean_
+
+****
+
+Question #9). **Use the HSB2 data to illustrate how each member of the apply family works. Do this by selecting the correct family member to accomplish each of the following tasks for the five test scores (not the entire data set). Make sure to use each family member one time, and only one time. (10 points)**
+
+```{r}
+# choosing variables of interest
+
+cols1<- c(5, 7:11)
+test_scores_data<-hsb2[,cols1]
+test_scores_data$schtyp<- as.factor(test_scores_data$schtyp)
+test_scores_data$schtyp<- ordered(test_scores_data$schtyp,levels = c(1,2),
+labels = c("public", "private"))
+
+test_scores_data
+```
+
+a. Put the standard deviation (SD) of each test as an element in a list of the five SDs.
+
+```{r}
+# lapply: apply a fxn to each element and obtain a list
+
+List_SDs<-lapply(test_scores_data[,2:6],sd )
+List_SDs
+```
+
+*****
+
+b. Create a vector of SDs for the five tests.
+
+```{r}
+# We use sapply: same as lapply but returns a vector
+
+new_test_scores<-test_scores_data[,-1]
+new_test_scores
+vec_scores<-sapply(new_test_scores, sd)
+vec_scores
+
+# check if it returns a vector
+
+is.vector(vec_scores)
+```
+
+*****
+
+c. Create a vector of the standard deviation of the five test scores for each student in the sample.
+
+```{r}
+# summarize the data  by finding the statistics of each row or column
+
+stud_scores_sd<-apply(new_test_scores,1,sd)
+stud_scores_sd
+
+# check if it is a vector
+
+is.vector(stud_scores_sd)
+```
+
+*****
+
+
+d. Obtain SDs for the five tests by school type (i.e., public or private)
+
+
+```{r}
+# tapply-create data with an factor for indexing
+# We use aggregate()-can be thought as a generalization of tapply()
+
+aggregate(test_scores_data[,2:6],by=list(test_scores_data$schtyp), sd)
+
+```
+
+****
+
+
+Question #10). **Construct a vector of any nine different numbers between 0 and 100. Next, add two missing indicators to your vector, somewhere mixed in among the numbers. Now add infinity to your vector, again anywhere within the vector. You should now have a vector of length 12. Use your vector to demonstrate, with explanation, all possible arguments for the range function. If the range function can be used on more types of data than numeric, also construct additional vectors to demonstrate all possible uses of the range function. (13 points)**
+
+```{r}
+# Get a vector of 9 numbers from 0 to 100
+
+my_vec_rand<-runif(9, min=0, max=100)
+
+# we add two NAs
+
+ins <-c(NA,NA)
+point <- which(order(c(ins,my_vec_rand))==3)
+my_new_vec<-append(my_vec_rand, ins, point-1)
+# Lets add infinity
+
+ins_2<-Inf
+my_new_vec<-append(my_new_vec, ins_2, point-2)
+my_new_vec
+
+# Lets check the length of the final vector (should be 12)
+
+length(my_new_vec)
+
+```
+
+```{r}
+# Range
+# (1) Returns min and max from the input vector
+     # if we have NAs then it will never give the result
+
+range(my_new_vec)
+
+# If we have infinity and other numbers(numeric) then use na.rm=TRUE
+  # to suppress NA
+
+range(my_new_vec,na.rm =TRUE)
+
+# range in R - vectors with alphabetical data (character data)
+
+x<-c("c","r","e","a","g","e","z")
+range(x)
+
+#create data frame
+
+df <- data.frame(x=c(1, 3, NA, 5, 16, 18, 22, 29),
+                 y=c(NA, 4, 8, 9, 14, 23, 29, 36),
+                 z=c(2, NA, 9, 4, 13, 17, 22, 40))
+
+#find range of all values in entire data frame
+
+max(df, na.rm=TRUE) - min(df, na.rm=TRUE)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,47 @@
+---
+title:  "EDRM 718 Sp21: Project B (Creating and Using Functions)"
+author:  "Geophrey O. Odero"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_notebook
+---
+
+
+```{r include=FALSE}
+# these libraries are good when it comes to plots and data manipulation
+
+if(!require(devtools)) install.packages("devtools")
+library(tidyverse)
+library(here)
+library(plyr)
+library(gtools)
+library(ggplot2)
+library(cowplot)
+library(rlang)
+library(ggpubr)
+library(tibble)
+```
+
+
+*****
+
+**_Directions_: This project will require you to begin a collection of function scripts in your repo, write functions for your collection, and source these in to demonstrate how they work. These first functions will focus on preparing to conduct research projects that involve raters. Raters are often employed in research projects to rate performances, products, behaviors, and other variables that are best measured through observation.Researchers who recruit raters are responsible for training to try to achieve a high degree of consistency.They must also verify this consistency and take steps when interrater reliability is deemed to be too low. Put your function folder and notebook in your repo and push these to GitHub prior to the deadline.(100 points possible)**
+
+***
+
+Question #1). **Create a functions folder in your repo where you will begin to collect functions that you write.**
+
++ _Functions folder created successfully_
+
+*****
+
+Question #2). **Often raters are asked to place observations in a category. For example, suppose that every rater is rating a performance. The rater might be asked to decide if the performance is a very weak performance,weak performance,somewhat weak performance,somewhat strong performance,strong performance, or very strong performance. When raters select categories, they are typically recorded as numbers. For this example, these would be 1 (very weak performance) to 6 (very strong performance).A way to check the consistency among two raters is to determine the percentage of times they select the same category. Write a function that has a single argument that is a data frame of raters (in columns) and their observation scores (in rows). The function should return a well-labeled data frame with raters still in columns, but four rows that provide some statistics about the percent agreement with all other raters. (Note that a single percent agreement is among two raters, so a separate percent agreement needs to be calculated for a rater with each other rater.) These should be the mean of the percent agreement (PA) statistic, the standard deviation of PA, and the minimum and maximum PA.**
+
+***
+
+Question #3). **Sometimes it is possible to achieve higher consistency through collapsing categories. For example, the categories above might be collapsed in groups of two to represent, weak performance, moderate performance, and strong performance. Write a function that takes two arguments. The first is a data frame of raters (in columns) and their observation scores (in rows). The second is a matrix with two columns in which each row specifies the lowest and highest scores that should be collapsed to form a new category. The function should return a data frame of raters and their scores based on the newly formed categories**
+
+
+*****
+
+Question #4). **Create a notebook to analyze and report on the music performance data. These data are from the scoring of eight raters who judged high school orchestras in a competition. Source in your functions so that you can use them in the notebook. Study the consistency of raters using (a) the original ratings, (b) collapsing into three categories in groups of two, as described in the example above, and (c) collapsing into five categories by combining the somewhat weak and somewhat strong categories into a single not weak or strong category. You may eliminate one or two raters if you believe it is justified based on your analysis. Once you have decided on the final rater pool, determine which orchestras win first, second, and third place. In the past when it was “too close to call,” judges sometimes have placed more than one school orchestra in one of these award categories, so you may do the same if you deem that best**
+

@@ -1,0 +1,281 @@
+---
+title:  "EDRM 718 Sp21: Exercise Set E"
+author:  "Geophrey O. Odero"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_notebook
+---
+
+
+```{r include=FALSE}
+# these libraries are good when it comes to plots and data manipulation
+
+library(tidyverse)
+library(here)
+library(Hmisc)
+```
+
+*****
+
+**Directions:** _Complete this assignment in an R notebook. Make sure to number each item, but it is optional for you to copy the prompt for the item. Make sure that your notebook is neat and organized and that all your code chunks run without error, even after clearing the environment. Include both the exercise set letter and your name in your notebook filename. When you are finished, push your repository to GitHub. (Four points per item unless stated otherwise.)_
+
+
+_Use ggplot2 (part of the tidyverse package) for all graphs in this assignment. Use captions to indicate figure numbers and descriptions, then refer to these numbers in accompanying narrative that briefly describes your main findings. Use the HSB2 data for Part I._
+
+*****
+
+```{r echo=FALSE}
+# upload hsb2 data----------------
+
+hsb2_data<- read.csv(here("Data","hsb2.csv"))
+```
+
+# Part I
+
+Question #1). **Create a histogram of math scores.**
+
+
+```{r echo=FALSE}
+ggplot(hsb2_data, aes(math)) +
+       geom_histogram(bins=29,color="black", fill="white")+
+       theme(panel.border = element_rect(fill="NA",color="black", 
+                                    size=0.5,linetype="solid"))+
+       labs(title = "Histogram of Math Scores",
+       caption = "Figure 1: Histogram of Math Scores",
+       x = "Math Scores", y = "Count")+
+       theme(plot.title = element_text(hjust = 0.5))
+```
+
+*****
+
+
+
+Question #2). **Create a scatterplot to illustrate the relationship of math and science scores. Put math on the horizontal axis.**
+
+```{r echo=FALSE}
+ggplot(hsb2_data, aes(math,science))+
+      geom_point()+ labs(title = "Scatterplot of Math Vs. Sci Scores",
+      caption = "Figure 2: Scatterplot Math vs Sci Scores",
+      x = "Math Scores", y = "Science Scores")+
+      theme(plot.title = element_text(hjust = 0.5))+
+      theme(panel.border = element_rect(fill="NA",color="black", 
+                                    size=0.5,linetype="solid"))
+```
+
+*****
+
+Question #3). **Create a scatterplot to illustrate the relationship of math and science scores. Put math on the horizontal axis. Use different colors to indicate the SES for each student in the plot.**
+
+
+
+```{r echo=FALSE}
+hsb2_data$ses<- factor(hsb2_data$ses,
+                      labels = c("low", "medium","high"))
+ggplot(hsb2_data, aes(math,science))+
+             geom_point()+ labs(title = "Scatterplot of Math Vs. Sci Scores",
+             caption = "Figure 3: Scatterplot Math vs Sci Scores",
+             x = "Math Scores", y = "Science Scores")+
+             theme(plot.title = element_text(hjust = 0.5))+
+             theme(panel.border = element_rect(fill="NA",color="black", 
+                                    size=0.5,linetype="solid"))+
+             geom_point(aes(colour = factor(ses)))
+```
+*****
+
+
+Question #4). **Create a scatterplot to illustrate the relationship of math and science scores. Put math on the horizontal axis. Use different colors to indicate the SES for each student in the plot. Put a linear regression line on your plot.**
+
+```{r echo=FALSE}
+ggplot(hsb2_data, aes(math,science))+
+       geom_point()+
+       labs(title = "Scatterplot of Math Vs. Sci Scores",
+       caption = "Figure 4: Regression of Science on Math Scores",
+       x = "Math Scores", y = "Science Scores")+
+       theme(plot.title = element_text(hjust = 0.5))+
+       theme(panel.border = element_rect(fill="NA",color="black", 
+                                    size=0.5,linetype="solid"))+
+       geom_point(aes(colour = factor(ses)))+
+       geom_smooth(mapping = aes(x = math, y = science), method=lm) 
+```
+*****
+
+
+Question #5). **Name each layer that you used in #3 and describe what was accomplished by adding the layer.**
+
++ ggplot(hsb2_data, aes(math,science)) - creates the plot with aesthetic mappings.
+
++ geom_point() adds a layer of points to your plot, which creates a scatterplot.
+
++ labs()- for the axis, caption and legend labels display.
+
++ theme - to customize the non-data components of your plots: i.e. titles, labels,
+   fonts, background, gridlines, and legends. Themes can be used to give plots 
+   a consistent customized look.
+
+*****
+
+
+Question #6). **Create two faceted scatterplots to illustrate the relationship of math and science scores: one for private school students and one for public school students. Put math on the horizontal axis of each plot. Use different colors to indicate the SES for each student in the plots. Put a linear regression line on your plots.**
+
+```{r echo=FALSE}
+#ggplot(data = hsb2_data, aes(x =math, y = science, color = ses)) + geom_point()+
+#   facet_grid(. ~ schtyp)
+
+hsb2_data$schtyp <- factor(hsb2_data$schtyp,
+                      labels = c("public", "private"))
+
+          ggplot(data = hsb2_data) +
+          geom_point(mapping = aes(x = math, y = science,color = ses)) +
+          facet_grid(.~ schtyp)+
+          geom_smooth(mapping = aes(x = math, y = science), method=lm)+
+          labs(title = "Plot of Math and Science scores by School Type",
+          caption = "Fig. 5: Plot of Math and Science scores by School Type") +
+          theme(plot.title = element_text(hjust = 0.5))+
+          theme(panel.border = element_rect(fill="NA",color="black", 
+                                    size=0.5,linetype="solid"))
+#facet_wrap(~schtyp)
+```
+
+*****
+
+Question #7). **Create side-by-side boxplots to illustrate the differences in math scores of students from different SES groups.**
+
+
+```{r echo=FALSE}
+hsb2_data$ses<- factor(hsb2_data$ses,
+                      labels = c("low", "medium","high"))
+         ggplot(hsb2_data, aes(x=ses, y=math,fill=ses)) +
+         labs(title = "Side-by-Side boxplots Math scores at SES",
+         caption = "Figure 6: Side-by-Side boxplots Math scores at SES") +
+         theme(plot.title = element_text(hjust = 0.5))+
+         theme(panel.border = element_rect(fill="NA",color="black", 
+                                    size=0.5,linetype="solid"))+
+         geom_boxplot()
+```
+*****
+
+Question #8). **Create side-by-side boxplots to illustrate the differences in math scores of students from different SES groups. Include points for every student in your plot.**
+
+```{r echo=FALSE}
+hsb2_data$ses<- factor(hsb2_data$ses,
+                      labels = c("low", "medium","high"))
+        ggplot(hsb2_data, aes(x=ses, y=math,fill=ses)) +
+        labs(title = "Side-by-Side boxplots Math scores at SES",
+        caption = "Figure 7: Side-by-Side boxplots Math scores at SES") +
+        theme(plot.title = element_text(hjust = 0.5))+
+        theme(panel.border = element_rect(fill="NA",color="black", 
+                                    size=0.5,linetype="solid"))+
+        geom_boxplot()+
+        geom_point(position=position_dodge(width=0.75),aes(group=ses))+
+        geom_jitter(color="black", size=0.9, alpha=0.9)
+```
+
+
+
+*****
+
+Question #9). **Create side-by-side boxplots to illustrate the differences in math scores of students from different SES groups. Include points for every student in your plot. Also plot the mean for each group.**
+
+```{r echo=FALSE}
+hsb2_data$ses<- factor(hsb2_data$ses,
+                      labels = c("low", "medium","high"))
+         ggplot(hsb2_data, aes(x=ses, y=math,fill=ses)) +
+         labs(title = "Side-by-Side boxplots Math scores at SES",
+         caption = "Figure 8: Side-by-Side boxplots Math scores at SES") +
+         theme(plot.title = element_text(hjust = 0.5))+
+         theme(panel.border = element_rect(fill="NA",color="black", 
+                                    size=0.5,linetype="solid"))+
+         geom_boxplot()+
+         geom_jitter(color="black", size=0.7, alpha=0.9)+
+         geom_point(position=position_dodge(width=0.75),aes(group=ses))+
+         stat_summary(fun=mean, geom="point", shape=5, size=4)
+```
+
+*****
+
+Question #10). **Create stacked bar plots to illustrate how SES groupings is related to the private-public school distinction. Plot proportions on the vertical axis.**
+
+```{r echo=FALSE}
+ggplot(hsb2_data,aes(x = schtyp,fill = ses)) + 
+         geom_bar(position = "fill")+
+         labs(title = "Stacked bar plots SES by School Type",
+         x = "School Type", y =  "Proportion",
+         caption = "Figure 9: Stacked bar plots SES by School Type") +
+         theme(plot.title = element_text(hjust = 0.5))+
+         theme(panel.border = element_rect(fill="NA",color="black", 
+                                    size=0.5,linetype="solid"))
+```
+
+*****
+
+# Part II
+
+Question #11). **Use the mental health study data to graphically explore the relationship of life events and SES on mental health impairment. Your graph should illustrate whether SES moderates the influence of life events on mental health. (20 points)**
+
+```{r echo=FALSE}
+# load data------------------
+ment_health<- read.csv(here("Data","Mental Health Study Data.csv"))
+# convert ses into factors - with three categories (low, medium and high)
+ment_health$ses <- as.numeric(cut2(ment_health$SES, g=3))
+ment_health$ses<- factor(ment_health$ses,
+                      labels = c("low", "medium","high"))
+ggplot(ment_health,aes(x = LifeEvts,y = MentImp,color = ses))+
+             geom_point(alpha = .3, size = .9) +
+             geom_smooth(method = "lm")+
+             labs(title = "Relationship btw Life Events and SES",
+             x = "Life Events", y =  "Mental Health Impairement",
+             caption = "Figure 10: Plot of Life Events and SES") +
+             theme(plot.title = element_text(hjust = 0.5))+
+             theme(panel.border = element_rect(fill="NA",color="black", 
+                                    size=0.5,linetype="solid"))
+
+```
+
+_From the plot, the lines do cross thus, ses impacts on the relationship of life events on mental health._
+
+*****
+
+
+Question #12). **Use the notes study data to graphically explore the relationship of method of note taking to later recall. Your graph should illustrate whether the type of lecture moderates the effect of note taking method on recall. (20 points)**
+
+```{r echo=FALSE}
+# load data-------------------
+note_data<- read.csv(here("Data","Notes Data.csv"))
+# convert to factors
+note_data$lecture<- factor(note_data$lecture, labels = c("disorganized", "organized"))
+note_data$notes<- factor(note_data$notes, labels = c("outline", "linear","matrix"))
+# plots
+ggplot(note_data, aes(x=notes, y=score, fill=lecture)) +
+             geom_boxplot()+
+             labs(title = "Plot of Note Taking vs. Recall",
+             x = "Types of Notes", y =  "Score on Recall Test",
+             caption = "Figure 11: Plot of Score on a Recall Test ") +
+             theme(plot.title = element_text(hjust = 0.5))+
+             theme(panel.border = element_rect(fill="NA",color="black", 
+                                    size=0.5,linetype="solid"))
+```
+
+_From the plots we see that irrespective of type of note-taking, the organized lecture method leads to higher score on recall test than the disorganized. Thus, the type of lecture moderates the effect of note taking method on recall._
+
+*****
+
+# Part III
+
+
+Question #13). **For this exercise, use a data set of interest to you (preferably one from your own research study or perhaps a study you have worked on with a professor, though this is not a requirement) that includes at least five variables with at least one of each type (categorical and quantitative). Visually display relationships of multiple variables with a single graph. (Faceting is allowed). Your points for this exercise will be based on the attractiveness of your graph, the number of variables you were able to informatively include, and the amount of information that can be extracted from your graph. (Think Hans Rosling!) (40 points)**
+
+_This dataset contains a subset of the fuel economy data that EPA makes available \url{http://fueleconomy.gov(http://fueleconomy.gov)}.  It contains only models with new release every year between 1999 and 2008 - was used as a proxy for the popularity of the car.
+
+```{r echo=FALSE}
+ggplot(data = mpg, aes(x = displ, y = hwy, color = drv)) + 
+              geom_point()+
+              facet_wrap(~cyl)+
+             labs(title = "Plot of Hwy mileage vs Engine Displ. on other variables",
+             x = "Engine Displacement", y =  "Highway Mileage",
+             caption = "Figure 12: Displaying Multiple variables") +
+             theme(plot.title = element_text(hjust = 0.5))+
+             theme(panel.border = element_rect(fill="NA",color="black", 
+                                    size=0.5,linetype="solid"))
+
+```
+
+_From the plot, we see that cylinders 4 and 6 has a clear relationship in terms of the type of drive train.  It is evident that the bigger the cylinder the more the engine displacement, with 4 being least and 8 the most._
