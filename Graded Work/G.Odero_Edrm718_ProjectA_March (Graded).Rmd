@@ -1,0 +1,483 @@
+---
+title:  "Analysis of Gun Deaths in America"
+author:  "Geophrey O. Odero"
+output: html_notebook
+---
+
+```{r include=FALSE}
+# The "here" library will let me read the data from an individual folder.
+
+# The "tidyverse" library  and "ggplot2" has other packages for declaratively 
+# creating graphics
+
+# The "formatR" will help clean up poorly formatted code
+
+library(here)
+library(tidyverse)
+library(magrittr)
+library(ggplot2)
+library(formatR)
+
+# All data is from the CDC's Multiple Cause of Death datafile.
+
+# Data: http://www.cdc.gov/nchs/data_access/VitalStatsOnline.htm#Mortality_Multiple
+
+# Codebook: http://www.cdc.gov/nchs/data/dvs/Record_Layout_2014.pdf
+
+# Here, I read the data "full_data" and then pull out the gun deaths data for the year 2012 and and put it in an object called "Year_2012_dat".
+
+full_data <- read.csv("C:/Users/jeffo/OneDrive/Desktop/guns-data/full_data.csv")
+Year_2012_dat<- subset(full_data, full_data$year == "2012")
+```
+
+### Description
+
+This report will study the nature of gun deaths in America for the year 2012. The data for this study is from the website _FiveThirtyEight_ (explored the more than 33,000 annual gun deaths in America and what it would take to bring that number down). I will
+study the proportions of different gun deaths by gender and race. 
+
+*Source of data: FiveThirtyEight - "Gun Deaths in America". Year 2012 to 2014*.
+
+***
+
+### Analysis
+
+*Figure 1. Bar plots with proportion of sample of 33563 Americans in*
+*annual gun deaths for different intent classifications.*
+
+
+```{r echo=FALSE}
+
+# I calculated the frequencies of gun deaths in intent categories.
+
+intent.counts <- table(Year_2012_dat$intent)
+
+# I calculated the proportions of gun deaths in intent categories.
+
+intent.props <- prop.table(intent.counts)
+
+# I constructed a bar graph using these proportions.
+
+barplot(intent.props,
+        xlab = "Types of Gun Deaths",
+        ylab = "Proportion", ylim = c(0, 0.7))
+
+```
+
+The sample consists of 1.63% in the Accidental gun deaths category, 36.03% in the Homicide
+gun deaths category, 61.57% Suicide gun deaths category, and 0.762% in the Undetermined  gun deaths category.
+
+
+
+
+The sample data also includes five ethnic categories: Asian/Pacific Islander, 
+Black, Hispanic, Asian, Native American/Native Alaskan, and white. 
+The relationship of type of gun death to ethnic group is illustrated
+in Figure 2.
+
+***
+
+\newpage
+
+*Figure 2. Bar plots with percent of each type of gun death category within ethnic groups.*
+
+```{r echo=FALSE}
+
+# This constructs a two-way table of frequencies.
+
+intent.race.counts = table(Year_2012_dat$intent, Year_2012_dat$race)
+
+# This constructs conditional percentages (conditioned on ethnic group) of
+# intent categories.
+
+intent.race.percents = 100*prop.table(intent.race.counts, 2)
+
+
+# This provides a stacked bar graph.
+
+barplot(intent.race.percents,
+        xlab = "Ethnic Group",
+        ylab = "Percents",
+        legend = c("Accidental","Homicide","Suicide","Undetermined"),
+        args.legend = list(title = "Type of gun death", cex=0.7),cex.names=0.7)
+
+
+```
+
+*Table 2. Percent of each type of gun death type within each of five ethnic*
+*groups.*
+
+```{r echo=FALSE}
+
+# This provides percents. The "round (data,digits=2)" make the digits have
+# 2decimal points - making sense  to read and remember.
+
+round(intent.race.percents,digits=2)
+```
+Table 2 provides the percentages of each type of gun death category within each ethnic group. It is apparent that there is a relationship between type of gun death and ethnicity. A relatively low percentage of accidental gun deaths is observed in all ethnic categories. The percentages of suicide gun deaths in the White ethnic group is substantially higher than for other ethnic groups, whereas the percentages of Homicide gun deaths in the Black ethnic group is substantially higher compared to other ethnic groups.
+
+***
+
+\newpage
+
+***
+
+*Figure 3. Bar plots with proportion of sample of 33563 Americans*
+*annual gun deaths for different gender classifications.*
+
+
+```{r echo=FALSE}
+# I calculated the frequencies of gun deaths in each sex categories.
+
+
+sex.counts<- table(Year_2012_dat$sex)
+
+# I calculated the proportions of gun deaths  in intent categories.
+
+sex.props <- prop.table(sex.counts)
+
+
+# I constructed a bar graph using these proportions.
+
+
+barplot(sex.props,
+        xlab = "Sex",
+        ylab = "Proportion", ylim = c(0, 1))
+
+
+```
+
+The sample consists of 14.08%  gun deaths in females, and 85.92% gun deaths males.
+
+
+***
+
+*Figure 4. Bar plots with percent of each type of gun death category within gender groups.*.
+
+```{r echo=FALSE}
+
+# This constructs a two-way table of frequencies.
+
+intent.sex.counts = table(Year_2012_dat$intent, Year_2012_dat$sex)
+
+# This constructs conditional percentages (conditioned on gender group) of
+# intent categories.
+
+intent.sex.percents = 100*prop.table(intent.sex.counts, 2)
+
+
+# This provides a stacked bar graph.
+
+barplot(intent.sex.percents,
+        xlab = "Sex",
+        ylab = "Percents",
+        legend = c("Accidental","Homicide","Suicide","Undetermined"),
+        args.legend = list(title = "Type of gun death", cex=0.7),cex.names=0.7)
+
+
+```
+
+*Table 4. Percent of each type of gun death type within each of two sex*
+*groups.*
+
+```{r echo=FALSE}
+
+# This provides percents. The "round (data,digits=2)" make the digits have
+# 2decimal points - making sense  to read and remember.
+
+round(intent.sex.percents,digits=2)
+```
+
+Table 4 provides the percentages of each gun death category within each sex (gender) group. It is apparent that there is a relationship been gun death category and sex. A relatively low
+percentage of males and females gun deaths are undetermined. There is relatively higher percentage of gun deaths attributed to suicide in both males and females.
+
+\newpage
+
+### Conclusions
+
+I examined the proportions of different types of guns deaths, race, and sex. The result of the analysis showed that there is a small percentage of gun deaths in females (14.08%) and a lager percentage of gun deaths(85.92%) in males.  The results also show that about 1.63%  gun deaths were accidental, 36.03% were due homicide, 61.57% were due suicide, and 0.762%  were undetermined.
+
+For two secondary questions; first, I looked at the relationship of type of gun death to ethnic groups, finding that there is a clear relationship. A relatively low percentage of accidental gun deaths are in all ethnic categories. The percentages of suicide gun deaths in the White ethnic group is substantially higher compared to other ethnic groups, whereas the percentages of Homicide gun deaths in the Black ethnic group is substantially higher compared other ethnic groups.  Second, I looked at  each gun death category within each sex (gender) group. It is apparent that there is a relationship of gun death category and sex. A relatively low percentage of males and females gun deaths are undetermined. There is relatively higher percentage of gun deaths attributed to suicide in both males and females.
+
+*****
+
+
+##End of report
+
+\newpage
+
+
+### Gun Deaths 2019
+
+```{r include=FALSE}
+# Here I upload the 2019 gun deaths data
+
+full_data_19 <- read.csv("C:/Users/jeffo/OneDrive/Desktop/guns-data/full_data_19.csv")
+```
+
+**Question #3). Making changes to _CDC_parser.R_ to extract 2019 data**.
+
+ _Data extracted successfully_.
+ 
+*****
+ 
+**Question #4). Install two packages: _tidyverse_ and _magrittr_**
+
+
+ _tidyverse_ and _magrittr_ installed successfully.
+ 
+*****
+ 
+**Question #5). Run the script**
+
+_Script run successfully_.
+
+*****
+
+**Question #6). Analysis of 2019 data**
+
+
+
+### Analysis
+
+*Figure 1. Bar plots with proportion of sample of 39709 Americans*
+*annual gun deaths for different intent classifications.*
+
+
+```{r echo=FALSE}
+
+# I calculated the frequencies of gun deaths in intent categories.
+
+intent.counts_19 <- table(full_data_19$intent)
+
+# I calculated the proportions of gun deaths in intent categories.
+
+intent.props_19<- prop.table(intent.counts_19)
+
+
+# I constructed a bar graph using these proportions.
+
+barplot(intent.props_19,
+        xlab = "Types of GUn Deaths",
+        ylab = "Proportion", ylim = c(0, 0.7))
+
+```
+
+
+The sample consists of 1.22% in the Accidental gun deaths category, 37.57% in the Homicide
+gun deaths category, 60.3% Suicide gun deaths category, and 0.87% in the Undetermined  gun deaths category.
+
+
+
+
+The sample data also includes five ethnic categories: Asian/Pacific Islander, 
+Black, Hispanic, Asian, Native American/Native Alaskan, and white. 
+The relationship of type of gun death to ethnic group is illustrated
+in Figure 2.
+
+***
+
+*Figure 2. Bar plots with percent of each type of gun death category within ethnic groups.*.
+
+```{r echo=FALSE}
+
+# This constructs a two-way table of frequencies.
+
+intent.race.counts_19 = table(full_data_19$intent, full_data_19$race)
+
+# This constructs conditional percentages (conditioned on ethnic group) of
+# intent categories.
+
+intent.race.percents_19 = 100*prop.table(intent.race.counts_19, 2)
+
+
+# This provides a stacked bar graph.
+
+barplot(intent.race.percents_19,
+        xlab = "Ethnic Group",
+        ylab = "Percents",
+        legend = c("Accidental","Homicide","Suicide","Undetermined"),
+        args.legend = list(title = "Type of gun death", cex=0.7),cex.names=0.7)
+
+
+```
+
+*Table 2. Percent of each type of gun death type within each of five ethnic*
+*groups.*
+
+```{r echo=FALSE}
+
+# This provides percents. The "round (data,digits=2)" make the digits have
+# 2decimal points - making sense  to read and remember.
+
+round(intent.race.percents_19,digits=2)
+```
+
+Table 2 provides the percentages of each type of gun death category within each ethnic group. It is apparent that there is a relationship between type of gun death and ethnicity. A relatively low percentage of accidental gun deaths is observed in all ethnic categories. The percentages of suicide gun deaths in the White ethnic group is substantially higher compared to other ethnic groups, whereas the percentages of Homicide gun deaths in the Black ethnic group is substantially higher compared to other ethnic groups.
+
+***
+
+\newpage
+
+***
+
+*Figure 3. Bar plots with proportion of sample of 33563 Americans*
+*annual gun deaths for different gender classifications.*
+
+
+```{r echo=FALSE}
+# I calculated the frequencies of gun deaths in each sex categories.
+
+
+sex.counts_19<- table(full_data_19$sex)
+
+# I calculated the proportions of gun deaths  in intent categories.
+
+sex.props_19<- prop.table(sex.counts_19)
+
+
+# I constructed a bar graph using these proportions.
+
+
+barplot(sex.props_19,
+        xlab = "Sex",
+        ylab = "Proportion", ylim = c(0, 1))
+
+
+
+```
+
+The sample consists of 14.27%  gun deaths in females, and 85.73% gun deaths males.
+
+
+*****
+
+
+
+\newpage
+
+*Figure 4. Bar plots with percent of each type of gun death category within gender groups.*
+
+```{r echo=FALSE}
+
+# This constructs a two-way table of frequencies.
+
+intent.sex.counts_19= table(full_data_19$intent, full_data_19$sex)
+
+# This constructs conditional percentages (conditioned on gender group) of
+# intent categories.
+
+intent.sex.percents_19 = 100*prop.table(intent.sex.counts_19, 2)
+
+
+# This provides a stacked bar graph.
+
+barplot(intent.sex.percents_19,
+        xlab = "Sex",
+        ylab = "Percents",
+        legend = c("Accidental","Homicide","Suicide","Undetermined"),
+        args.legend = list(title = "Type of gun death", cex=0.7),cex.names=0.7)
+
+
+```
+
+*Table 4. Percent of each type of gun death type within each of two sex*
+*groups.*
+
+```{r echo=FALSE}
+
+# This provides percents. The "round (data,digits=2)" make the digits have
+# 2decimal points - making sense  to read and remember.
+
+round(intent.sex.percents_19,digits=2)
+```
+
+Table 4 provides the percentages of each gun death category within each sex (gender) group. It is apparent that there is a relationship between gun death category and sex. A relatively low percentage of males and females gun deaths are accidental. There is relatively higher percentage of gun deaths attributed to suicide in both males and females.
+
+*****
+
+\newpage
+
+
+***Question#7.)  For each of the variables of interest, compare proportions for the two years (2012 and 2019) with graphs and descriptive statistics.***
+
+*Table 5. Proportion of each type of gun death type within each of the gun type groups*
+*groups.*
+
+```{r echo=FALSE}
+# Here we combine both 2012 and 2019 gun data sets using "rbind"
+
+gun_data_1219<-rbind(Year_2012_dat,full_data_19)
+
+# We compare the proportion of "type of gun death" for 2012 and 2019
+
+gun_death_type<- table(gun_data_1219$intent,gun_data_1219$year)
+tab1<-prop.table(gun_death_type)
+round(tab1, 4)
+
+```
+*Figure 5. Bar plots with proportion of each type of gun death category for 2012 and 2019.*
+
+```{r echo=FALSE}
+barplot(tab1, beside=TRUE, ylab="proportion",xlab="Year",legend=rownames(tab1),args.legend=list(title="Gun death"))
+```
+
+
+From Table 5 and Figure 5, there is no significant difference in the proportions of type of gun deaths for the years 2012 and 2019. However, there is a slight increase in proportion of gun deaths attributed to Homicide and Suicide from 2012 to 2019.
+
+
+*****
+
+*Table 6. Proportion of each racial group for  2012 and 2019 gun deaths*
+
+
+
+```{r echo=FALSE}
+
+# We compare the proportion of each racial group for 2012 and 2019 gun deaths
+
+gun_death_race<- table(gun_data_1219$race,gun_data_1219$year)
+tab2<-prop.table(gun_death_race)
+round(tab2, 3)
+```
+
+*Figure 6. Bar plots with proportion of each racial group gun deaths for 2012 and 2019.*
+
+```{r echo=FALSE}
+barplot(tab2, beside=TRUE,ylab="proportion",xlab="Year", legend=rownames(tab2),args.legend=list(title="Gun death by race",cex=0.6))
+```
+
+
+From Table 6 and Figure 6, there is no significant difference in the proportions of gun deaths for the different racial groups in both years. However, the White ethnic group has a significantly high proportion of gun deaths compared to all other racial groups.
+
+*****
+
+\newpage
+
+*Table 7. Proportion of each sex group for  2012 and 2019 gun deaths*
+
+```{r echo=FALSE}
+
+# We compare the proportion of each sex group for 2012 and 2019 gun deaths
+
+gun_death_sex<- table(gun_data_1219$sex,gun_data_1219$year)
+tab3<-prop.table(gun_death_sex)
+round(tab3, 3)
+```
+
+*Figure 7. Bar plots with proportion of each sex group gun deaths for 2012 and 2019.*
+
+
+```{r echo=FALSE}
+# Here we display the proportions using a bar plot
+
+barplot(tab3, beside=TRUE, legend=rownames(tab3),args.legend=list(title="Gun death and Sex",cex=0.6))
+```
+
+
+From Table 7 and Figure 7, there is slightly a higher proportion of gun deaths in both males and females in the year 2019 compared to the year 2019.
+
+***
+
+**Great work!**
+
+**100/100**
